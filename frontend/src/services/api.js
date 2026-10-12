@@ -1,7 +1,8 @@
 import axios from 'axios';
-
-const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' });
-
+const api = axios.create({
+  baseURL: 'https://library-management-system-1-fl4d.onrender.com/api',
+  timeout: 15000
+});
 // Attach the JWT token to every request.
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('lms_token');
