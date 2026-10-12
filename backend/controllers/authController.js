@@ -29,9 +29,15 @@ exports.login = asyncHandler(async (req, res) => {
     (item) => item.email.toLowerCase() === email.toLowerCase()
   );
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new HttpError(401, 'Invalid email or password.');
-  }
+  if (!user) {
+  throw new HttpError(401, 'Invalid email or password.');
+}
+
+const passwordMatches = await bcrypt.compare(password, user.password);
+
+if (!passwordMatches) {
+  throw new HttpError(401, 'Invalid email or password.');
+}
 
   if (!user.isActive) {
     throw new HttpError(403, 'Your account is deactivated. Contact the librarian.');
