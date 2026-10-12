@@ -17,9 +17,21 @@ if (!process.env.JWT_SECRET) {
 const app = express();
 
 app.use(helmet());
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://library-management-system-manjoth.vercel.app'
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173'
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin === process.env.CLIENT_URL) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  }
 }));
+
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan('dev'));
 
